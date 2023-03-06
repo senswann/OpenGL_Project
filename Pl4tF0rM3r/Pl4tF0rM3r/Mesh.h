@@ -2,11 +2,11 @@
 //include
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "C:/Users/swann/Documents/OpenGL/OpenGLProjet/external/glm-master/glm/glm.hpp"
+#include "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/external/glm-master/glm/glm.hpp"
 #include "stdio.h"
 #include "stdlib.h"
-#include "C:/Users/swann/Documents/OpenGL/OpenGLProjet/external/glm-master/glm/ext/matrix_clip_space.hpp"
-#include "C:/Users/swann/Documents/OpenGL/OpenGLProjet/external/glm-master/glm/ext/matrix_transform.hpp"
+#include "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/external/glm-master/glm/ext/matrix_clip_space.hpp"
+#include "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/external/glm-master/glm/ext/matrix_transform.hpp"
 #include <iostream>
 #include <vector>
 #include "../Includes/objloader.hpp"

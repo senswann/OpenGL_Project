@@ -1,15 +1,2 @@
-﻿  main.cpp
-C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(21,19): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(48,10): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
-C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(49,11): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
-C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(65,35): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(65,28): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-  objloader.cpp
-  shader.cpp
-  vboindexer.cpp
-  Camera.cpp
-  Mesh.cpp
-C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\Pl4tF0rM3r\Mesh.cpp(40,34): warning C4267: '=' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\Pl4tF0rM3r\Mesh.cpp(292,2): warning C4267: 'argument' : conversion de 'size_t' en 'GLsizei', perte possible de données
-  Génération de code en cours...
+﻿  Camera.cpp
   Pl4tF0rM3r.vcxproj -> C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\x64\Debug\Pl4tF0rM3r.exe

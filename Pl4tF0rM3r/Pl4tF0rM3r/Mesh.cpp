@@ -1,6 +1,6 @@
 ﻿#include "Mesh.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "C:/Users/swann/Documents/OpenGL/OpenGLProjet/external/stb-master/stb_image.h"
+#include "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/external/stb-master/stb_image.h"
 
 Mesh::Mesh(glm::vec3 position, GLuint programID, GLfloat* colorBufferData, int sizeColorBuffer, const char* pathTexture, const char* pathOBJ, bool is_teture, bool is_cellshading) : scale(1.0f) {
 	matrixID = glGetUniformLocation(programID, "mvp");

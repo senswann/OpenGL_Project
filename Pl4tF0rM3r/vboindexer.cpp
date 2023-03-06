@@ -1,7 +1,7 @@
 #include <vector>
 #include <map>
 
-#include "C:/Users/swann/Documents/OpenGL/OpenGLProjet/external/glm-master/glm/glm.hpp"
+#include "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/external/glm-master/glm/glm.hpp"
 
 #include "Includes/vboindexer.hpp"
 

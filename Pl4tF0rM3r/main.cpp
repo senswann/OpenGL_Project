@@ -82,46 +82,6 @@ int main() {
 
 	glClearColor(211.f/ 255.f, 95.f/ 255.f, 255.f/ 255.f,255.f/ 255.f);
 
-	// Les sommets. Trois floats cons�cutifs donnent un sommet 3D ; trois sommets cons�cutifs donnent un triangle
-	// Un cube poss�de six faces avec deux triangles pour chaque, donc cela fait 6*2=12 triangles et 12*3=36 sommets 
-	GLfloat g_vertex_buffer_data_cube[] = {
-	-1.0f,-1.0f,-1.0f, // triangle 1 : d�but
-	-1.0f,-1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f, // triangle 1 : fin 
-	1.0f, 1.0f,-1.0f, // triangle 2 : d�but 
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f, // triangle 2 : fin 
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f,
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f
-	};
 	// Une couleur pour chaque sommet. Elles ont �t� g�n�r�es al�atoirement. 
 	GLfloat g_color_buffer_data_cube[] = {
 	0.583f,  0.771f,  0.014f,
@@ -161,45 +121,6 @@ int main() {
 	0.820f,  0.883f,  0.371f,
 	0.982f,  0.099f,  0.879f
 	};
-	// Deux coordonn�es UV pour chaque sommet. Les coordonn�es ont �t� cr��es avec Blender.
-	GLfloat g_uv_buffer_data_cube[] = {
-	0.000059f, 1.0f - 0.000004f,
-	0.000103f, 1.0f - 0.336048f,
-	0.335973f, 1.0f - 0.335903f,
-	1.000023f, 1.0f - 0.000013f,
-	0.667979f, 1.0f - 0.335851f,
-	0.999958f, 1.0f - 0.336064f,
-	0.667979f, 1.0f - 0.335851f,
-	0.336024f, 1.0f - 0.671877f,
-	0.667969f, 1.0f - 0.671889f,
-	1.000023f, 1.0f - 0.000013f,
-	0.668104f, 1.0f - 0.000013f,
-	0.667979f, 1.0f - 0.335851f,
-	0.000059f, 1.0f - 0.000004f,
-	0.335973f, 1.0f - 0.335903f,
-	0.336098f, 1.0f - 0.000071f,
-	0.667979f, 1.0f - 0.335851f,
-	0.335973f, 1.0f - 0.335903f,
-	0.336024f, 1.0f - 0.671877f,
-	1.000004f, 1.0f - 0.671847f,
-	0.999958f, 1.0f - 0.336064f,
-	0.667979f, 1.0f - 0.335851f,
-	0.668104f, 1.0f - 0.000013f,
-	0.335973f, 1.0f - 0.335903f,
-	0.667979f, 1.0f - 0.335851f,
-	0.335973f, 1.0f - 0.335903f,
-	0.668104f, 1.0f - 0.000013f,
-	0.336098f, 1.0f - 0.000071f,
-	0.000103f, 1.0f - 0.336048f,
-	0.000004f, 1.0f - 0.671870f,
-	0.336024f, 1.0f - 0.671877f,
-	0.000103f, 1.0f - 0.336048f,
-	0.336024f, 1.0f - 0.671877f,
-	0.335973f, 1.0f - 0.335903f,
-	0.667969f, 1.0f - 0.671889f,
-	1.000004f, 1.0f - 0.671847f,
-	0.667979f, 1.0f - 0.335851f
-	};
 
 
 	//light color
@@ -207,16 +128,18 @@ int main() {
 	//light pos
 	glm::vec3 lightPos = glm::vec3(2.0f, 1.5f, 2.0f);
 
-	GLuint programID = LoadShaders("C:/Users/swann/Documents/OpenGL/OpenGLProjet/Shader/VertexShader.vert", "C:/Users/swann/Documents/OpenGL/OpenGLProjet/Shader/FragmentShader.frag");
-	Camera* cam = new Camera(glm::vec3(0.f, 0.f, 7.f));
-	Mesh* cube = new Mesh(glm::vec3(0, 0, 0), programID, g_color_buffer_data_cube,sizeof(g_color_buffer_data_cube), "C:/Users/swann/Documents/OpenGL/OpenGLProjet/Shader/container.jpg", "C:/Users/swann/Documents/OpenGL/OpenGLProjet/Model/cube.obj", true, false);
+	GLuint programID = LoadShaders("C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/VertexShader.vert", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/FragmentShader.frag");
+	Camera* cam = new Camera(glm::vec3(0.f, 1.f, 0.f));
+	Mesh* cube = new Mesh(glm::vec3(3, 1, 3), programID, g_color_buffer_data_cube,sizeof(g_color_buffer_data_cube), "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/container.jpg", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", true, false);
 	cube->SetMVP(cam->GetView(), projection);
-	Mesh* cube2 = new Mesh(glm::vec3(3, 0, 3), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/OpenGL/OpenGLProjet/Model/untitled.obj",false, true);
-	cube2->SetMVP(cam->GetView(), projection);
-	Mesh* cube3 = new Mesh(glm::vec3(0, 2, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/OpenGL/OpenGLProjet/Model/cube.obj", false, true);
-	cube2->SetMVP(cam->GetView(), projection);
-	Mesh* cube4 = new Mesh(glm::vec3(0,4,0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, g_vertex_buffer_data_cube, sizeof(g_vertex_buffer_data_cube)/ sizeof(g_vertex_buffer_data_cube[0]), g_uv_buffer_data_cube, sizeof(g_uv_buffer_data_cube)/ sizeof(g_uv_buffer_data_cube[0]), false, false);
-	cube4->SetMVP(cam->GetView(), projection);
+
+	Mesh* platform = new Mesh(glm::vec3(0, -4, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", false, true);
+	platform->SetMVP(cam->GetView(), projection);
+	platform->setScale(2);
+
+	Mesh* platform2 = new Mesh(glm::vec3(10, -4, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", false, true);
+	platform2->SetMVP(cam->GetView(), projection);
+	platform2->setScale(2);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -225,21 +148,23 @@ int main() {
 		//input camera
 		cam->MoveCamera(window);
 		InputManager(window);
+		if (cam->isJumping)
+			cam->Jump();
+		else if(cam->GetPosition().y>1.f)
+			cam->Gravity();
 
 		cube->SetMVP(cam->GetView(), projection);
-		cube2->SetMVP(cam->GetView(), projection);
-		cube3->SetMVP(cam->GetView(), projection);
-		cube4->SetMVP(cam->GetView(), projection);
+		platform->SetMVP(cam->GetView(), projection);
+		platform2->SetMVP(cam->GetView(), projection);
 
 		//affiche
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
-		changeColor();
+		//changeColor();
 
 		cube->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
-		cube2->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
-		cube3->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
-		cube4->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
+		platform->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
+		platform2->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
