@@ -140,7 +140,6 @@
     <ClCompile Include="..\shader.cpp" />
     <ClCompile Include="..\vboindexer.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Gravity.cpp" />
     <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,13 +147,10 @@
     <ClInclude Include="..\Includes\shader.hpp" />
     <ClInclude Include="..\Includes\vboindexer.hpp" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Gravity.h" />
     <ClInclude Include="Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shader\FragmentShader.frag" />
-    <None Include="..\Shader\shader_CelShading_crayonnage.frag" />
-    <None Include="..\Shader\shader_CelShading_crayonnage.vert" />
     <None Include="..\Shader\VertexShader.vert" />
     <None Include="packages.config" />
   </ItemGroup>

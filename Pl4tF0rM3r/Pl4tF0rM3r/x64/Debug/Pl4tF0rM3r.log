@@ -1,2 +1,7 @@
-﻿  Camera.cpp
+﻿  main.cpp
+C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(21,19): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(48,10): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(49,11): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(65,35): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\main.cpp(65,28): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
   Pl4tF0rM3r.vcxproj -> C:\Users\swann\Documents\github\OpenGL_Project\Pl4tF0rM3r\x64\Debug\Pl4tF0rM3r.exe

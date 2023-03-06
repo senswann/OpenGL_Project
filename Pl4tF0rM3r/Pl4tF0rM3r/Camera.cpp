@@ -4,9 +4,9 @@ Camera::Camera(glm::vec3 position) {
 	currentTime = glfwGetTime();
 	lastTime = currentTime;
 
-	speed = 3.0f;
-	jumpForce = 0.1f;
-	rotationSpeed = 1.0f;
+	speed = 10.f;
+	jumpForce = 6.f;
+	rotationSpeed = 1.f;
 
 	// Angle horizontal : vers -Z 
 	horizontalAngle = 3.14f;
@@ -70,27 +70,26 @@ void Camera::SetCurrentView() {
 
 //fonction du jump
 void Camera::Jump() {
-	jumpCount++;
-	
-	if (jumpCount >= 2000) {
+	if (currentTime >=jumpDeltaTime) {
 		isJumping = false;
 		jumpCount = 0;
 	}
 	else {
-		m_postion += m_up * 0.01f * jumpForce;
+		m_postion += m_up * deltaTime * jumpForce;
+		jumpCount++;
 	}
 }
 
 void Camera::Gravity() {
-	m_postion -= m_up * 0.01f * (jumpForce*1.5f);
+	m_postion -= m_up * deltaTime * (jumpForce*1.35f);
 	if (m_postion.y <= 1)
 		isGrounded = true;
 }
 
 void Camera::MoveCamera(GLFWwindow* window) {
 	// R�cup�re le temps pour le d�placement
-	double currentTime = glfwGetTime();
-	float deltaTime = float(currentTime - lastTime);
+	currentTime = glfwGetTime();
+	deltaTime = float(currentTime - lastTime);
 	lastTime = currentTime;
 	// Aller vers l'avant
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
@@ -107,6 +106,7 @@ void Camera::MoveCamera(GLFWwindow* window) {
 	
 	// Jump
 	if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !isJumping && isGrounded) {
+		jumpDeltaTime = currentTime + 0.4f;
 		isJumping = true;
 		isGrounded = false;
 	}

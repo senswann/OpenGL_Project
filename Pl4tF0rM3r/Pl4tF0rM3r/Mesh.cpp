@@ -9,7 +9,7 @@ Mesh::Mesh(glm::vec3 position, GLuint programID, GLfloat* colorBufferData, int s
 	modelID = glGetUniformLocation(programID, "model");
 	lightColorID = glGetUniformLocation(programID, "lightColor");
 	lightPosID = glGetUniformLocation(programID, "lightPos");
-	viewPosID = glGetUniformLocation(programID, "viewPos");
+	colorID = glGetUniformLocation(programID, "color");
 
 	m_texture = is_teture;
 	if (is_teture) {
@@ -69,81 +69,6 @@ Mesh::Mesh(glm::vec3 position, GLuint programID, GLfloat* colorBufferData, int s
 	setPosition(position);
 }
 
-Mesh::Mesh(glm::vec3 position, GLuint programID, GLfloat* colorBufferData, int sizeColorBuffer, const char* pathTexture, GLfloat* vertexBufferData, int sizeVertexBuffer, GLfloat* uv_data, int sizeUv_data, bool is_teture, bool is_cellshading) {	
-	matrixID = glGetUniformLocation(programID, "mvp");
-
-	//light
-	modelID = glGetUniformLocation(programID, "model");
-	lightColorID = glGetUniformLocation(programID, "lightColor");
-	lightPosID = glGetUniformLocation(programID, "lightPos");
-	viewPosID = glGetUniformLocation(programID, "viewPos");
-
-	if (is_teture) {
-		loadTexture(programID, pathTexture);
-	}
-	isTextureID = glGetUniformLocation(programID, "isTexture");
-
-	m_cellshading = is_cellshading;
-	isCellShadingID = glGetUniformLocation(programID, "isCellShading");
-
-	// Cr�ation des normales
-	std::vector<glm::vec3> normals;
-	int i = 0;
-	while (i < sizeVertexBuffer)
-	{
-		// R�cup�ration des points
-		glm::vec3 p1 = glm::vec3(vertexBufferData[i], vertexBufferData[i + 1], vertexBufferData[i + 2]);
-		glm::vec3 p2 = glm::vec3(vertexBufferData[i + 3], vertexBufferData[i + 4], vertexBufferData[i + 5]);
-		glm::vec3 p3 = glm::vec3(vertexBufferData[i + 6], vertexBufferData[i + 7], vertexBufferData[i + 8]);
-
-		// Cr�ation des faces
-		glm::vec3 v1 = p2 - p1;
-		glm::vec3 v2 = p3 - p1;
-
-		// Calcul de la normale du triangle
-		glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
-		// On le met 3 fois pour le nombre de points
-		normals.push_back(normal);
-		normals.push_back(normal);
-		normals.push_back(normal);
-
-		i += 9;
-	}
-
-	m_texture = is_teture;
-
-	vertexArrayID;	// Vertex Array Object (VAO) / 1 par objet / stocke les VBO
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
-
-	m_vertexNumber = sizeVertexBuffer;
-
-	vertexBuffer; // Permet d'identifier notre tampon de sommets / Vertex Buffer Object (VBO)
-	glGenBuffers(1, &vertexBuffer); // G�n�re un tampon et place l'identifiant dans 'vertexbuffer'
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer); // Les commandes suivantes vont parler de notre tampon 'vertexbuffer'
-	glBufferData(GL_ARRAY_BUFFER, sizeVertexBuffer, vertexBufferData, GL_STATIC_DRAW); // Fournit les sommets � OpenGL.
-
-	colorBuffer;
-	glGenBuffers(1, &colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeColorBuffer, colorBufferData, GL_STATIC_DRAW);
-
-	uvBuffer;
-	glGenBuffers(1, &uvBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeUv_data, uv_data, GL_STATIC_DRAW);
-
-	glGenBuffers(1, &normalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-
-	// Matrice de projection : Champ de vision de 45� , ration 4:3, distance d'affichage : 0.1 unit�s <-> 100 unit�s 
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-
-	model = glm::mat4(1.0f);
-	setPosition(position);
-}
-
 Mesh::~Mesh(){
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteBuffers(1, &colorBuffer);
@@ -155,6 +80,7 @@ Mesh::~Mesh(){
 	glDeleteBuffers(1, &modelID);
 	glDeleteBuffers(1, &lightColorID);
 	glDeleteBuffers(1, &lightPosID);
+	glDeleteBuffers(1, &colorID);
 	glDeleteBuffers(1, &viewPosID);
 	glDeleteBuffers(1, &texture);
 	glDeleteBuffers(1, &vertexArrayID);
@@ -201,12 +127,13 @@ void Mesh::loadTexture(GLuint programID, const char* pathTexture) {
 	stbi_image_free(data);
 }
 
-void Mesh::DrawMesh(glm::vec3 viewPos, glm::vec3 lightColor, glm::vec3 lightPos) {
+void Mesh::DrawMesh(glm::vec3 viewPos, glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 color) {
 	//light
 	glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
 	glUniform3f(lightColorID, lightColor.x, lightColor.y, lightColor.z);
 	glUniform3f(lightPosID, lightPos.x, lightPos.y, lightPos.z);
 	glUniform3f(viewPosID, viewPos.x, viewPos.y, viewPos.z);
+	glUniform3f(colorID, color.x, color.y, color.z);
 	
 	// Pour chaque modèle affiché parce que la MVP sera différente (au moins pour la partie M)
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);

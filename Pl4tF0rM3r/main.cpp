@@ -128,6 +128,12 @@ int main() {
 	//light pos
 	glm::vec3 lightPos = glm::vec3(2.0f, 1.5f, 2.0f);
 
+	//couleur
+	glm::vec3 violet = glm::vec3(0.59, 0.2, 0.86);
+	glm::vec3 vert = glm::vec3(0.1, 0.57, 0.19);
+	glm::vec3 blanc = glm::vec3(1.0, 1.0, 1.0);
+	glm::vec3 rouge = glm::vec3(1.0, 0.0, 0.0);
+
 	GLuint programID = LoadShaders("C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/VertexShader.vert", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/FragmentShader.frag");
 	Camera* cam = new Camera(glm::vec3(0.f, 1.f, 0.f));
 	Mesh* cube = new Mesh(glm::vec3(3, 1, 3), programID, g_color_buffer_data_cube,sizeof(g_color_buffer_data_cube), "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/container.jpg", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", true, false);
@@ -141,6 +147,10 @@ int main() {
 	platform2->SetMVP(cam->GetView(), projection);
 	platform2->setScale(2);
 
+	Mesh* platform3 = new Mesh(glm::vec3(17, -1, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", false, true);
+	platform3->SetMVP(cam->GetView(), projection);
+	platform3->setScale(1.5);
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
@@ -148,7 +158,7 @@ int main() {
 		//input camera
 		cam->MoveCamera(window);
 		InputManager(window);
-		if (cam->isJumping)
+		if (cam->GetIsJumping())
 			cam->Jump();
 		else if(cam->GetPosition().y>1.f)
 			cam->Gravity();
@@ -156,15 +166,17 @@ int main() {
 		cube->SetMVP(cam->GetView(), projection);
 		platform->SetMVP(cam->GetView(), projection);
 		platform2->SetMVP(cam->GetView(), projection);
+		platform3->SetMVP(cam->GetView(), projection);
 
 		//affiche
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
 		//changeColor();
 
-		cube->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
-		platform->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
-		platform2->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition());
+		cube->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
+		platform->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
+		platform2->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
+		platform3->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

@@ -13,6 +13,7 @@ out vec3 FragColor;
 out vec3 Normal;
 out vec3 FragPos;
 
+uniform vec3 color;
 uniform mat4 mvp;
 uniform mat4 model;
 
@@ -21,5 +22,5 @@ void main(){
     FragPos= vec3(model * vec4(VertexPos, 1.0));
 	Normal = mat3(transpose(inverse(model))) * vertexNormal;
 	gl_Position = mvp * vec4(VertexPos,1);	
-	FragColor=vec3(0.50, 0.2, 0.80);
+	FragColor=color;
 }
