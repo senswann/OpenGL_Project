@@ -224,10 +224,18 @@ int main() {
 		InputManager(window);
 		if (cam->GetIsJumping())
 			cam->Jump();
+
+		//retomber apres le jump
 		else if(camPos.y>limitY)
 			cam->Gravity(false);
-		else if (camPos.x < -5.f || (15.f < camPos.x && camPos.x < 20.f) || (30.f < camPos.x && camPos.x < 33.f) || camPos.x > 48.f)
+		//check les bordures sur l'axe X
+		else if (camPos.x < -5.f || (15.f < camPos.x && camPos.x < 20.f) || (15.f < camPos.x && camPos.x < 20.f) || (30.f < camPos.x && camPos.x < 33.f) || camPos.x > 48.f)
 			cam->Gravity(false);
+		//check les bordures sur l'axe Z
+		else if (camPos.z < -5.f || camPos.z > 5.f || ((camPos.z < -2.5f|| camPos.z > 2.5f) && (15.f < camPos.x && camPos.x < 38.f)))
+			cam->Gravity(false);
+
+		std::cout << "x = " << camPos.x << "/ z = " << camPos.z << std::endl;
 
 		cube->SetMVP(cam->GetView(), projection);
 		neko->SetMVP(cam->GetView(), projection);
