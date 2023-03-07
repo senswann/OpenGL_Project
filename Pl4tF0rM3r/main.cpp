@@ -44,6 +44,25 @@ void changeColor() {
 	}
 }
 
+//poue check si nous somme sur un block
+void CheckColision(Camera cam, std::vector<glm::vec3> blockPosArray, std::vector<glm::vec3> blockSizeArray) {
+	glm::vec3 cameraPos = cam.GetPosition();
+	for (int i = 0; i < blockPosArray.size(); i++) {
+		if (cameraPos.x <blockPosArray.at(i).x + blockSizeArray.at(i).x &&
+			cameraPos.x + 1.f > blockPosArray.at(i).x &&
+			cameraPos.y < blockPosArray.at(i).y + blockSizeArray.at(i).y &&
+			cameraPos.y + 1.f > blockPosArray.at(i).y &&
+			cameraPos.z < blockPosArray.at(i).z + blockSizeArray.at(i).z &&
+			cameraPos.z + 1.f >blockPosArray.at(i).z) {
+			// Collision detected
+			std::cout << "ON A BLOCK" << std::endl;
+			cam.Gravity(true);
+			return;
+		}
+	}
+	cam.Gravity(false);
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int _width, int _height) {
 	width = _width;
 	height = _height;
@@ -62,7 +81,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(width, height, "Sussy", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Pl4tF0rM3r", NULL, NULL);
 	if (window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version\n");
 		glfwTerminate();
@@ -79,8 +98,6 @@ int main() {
 		glfwTerminate();
 		return -1;
 	}
-
-	glClearColor(211.f/ 255.f, 95.f/ 255.f, 255.f/ 255.f,255.f/ 255.f);
 
 	// Une couleur pour chaque sommet. Elles ont �t� g�n�r�es al�atoirement. 
 	GLfloat g_color_buffer_data_cube[] = {
@@ -126,57 +143,115 @@ int main() {
 	//light color
 	glm::vec3 lightColor = glm::vec3(0.75f, 0.75f, 0.75f);
 	//light pos
-	glm::vec3 lightPos = glm::vec3(2.0f, 1.5f, 2.0f);
+	std::vector<glm::vec3> lightPos;
+	lightPos.push_back(glm::vec3(5.f, 4.f, 0.f));
+	lightPos.push_back(glm::vec3(25.f, 4.f, 0.f));
+	lightPos.push_back(glm::vec3(40.f, 4.f, 0.f));
 
 	//couleur
 	glm::vec3 violet = glm::vec3(0.59, 0.2, 0.86);
 	glm::vec3 vert = glm::vec3(0.1, 0.57, 0.19);
-	glm::vec3 blanc = glm::vec3(1.0, 1.0, 1.0);
-	glm::vec3 rouge = glm::vec3(1.0, 0.0, 0.0);
+	glm::vec3 gris = glm::vec3(0.5, 0.58, 0.87);
+	glm::vec3 bleu = glm::vec3(0.09, 0.9, 0.8);
+	glm::vec3 ore = glm::vec3(1., 0.76, 0.);
+
+	glClearColor(bleu.x, bleu.y, bleu.z,1.0f);
 
 	GLuint programID = LoadShaders("C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/VertexShader.vert", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/FragmentShader.frag");
 	Camera* cam = new Camera(glm::vec3(0.f, 1.f, 0.f));
+
+	//props creation
 	Mesh* cube = new Mesh(glm::vec3(3, 1, 3), programID, g_color_buffer_data_cube,sizeof(g_color_buffer_data_cube), "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/container.jpg", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", true, false);
 	cube->SetMVP(cam->GetView(), projection);
+	cube->setScale(0.75);
 
-	Mesh* platform = new Mesh(glm::vec3(0, -4, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", false, true);
+	Mesh* neko = new Mesh(glm::vec3(45, 1, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/nekogirl.obj", false, true);
+	neko->SetMVP(cam->GetView(), projection);
+	neko->setRotate(0, 0.5, 0., -90.f);
+
+	//platform creation
+	std::vector<glm::vec3> blockPosArray;
+	std::vector<glm::vec3> blockSizeArray;
+
+	blockPosArray.push_back(glm::vec3(0, -1, 0));
+	blockPosArray.push_back(glm::vec3(10, -1, 0));
+	blockPosArray.push_back(glm::vec3(25, -1, 0));
+	blockPosArray.push_back(glm::vec3(35, -1, 0));
+	blockPosArray.push_back(glm::vec3(42, 0, 0));
+
+	blockSizeArray.push_back(glm::vec3(5, 5, 1));
+	blockSizeArray.push_back(glm::vec3(5, 5, 1));
+	blockSizeArray.push_back(glm::vec3(5, 2, 1));
+	blockSizeArray.push_back(glm::vec3(2, 2, 2));
+	blockSizeArray.push_back(glm::vec3(5, 5, 1));
+
+	Mesh* platform = new Mesh(blockPosArray.at(0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/platform.obj", false, true);
 	platform->SetMVP(cam->GetView(), projection);
-	platform->setScale(2);
 
-	Mesh* platform2 = new Mesh(glm::vec3(10, -4, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", false, true);
+	Mesh* platform2 = new Mesh(blockPosArray.at(1), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/platform.obj", false, true);
 	platform2->SetMVP(cam->GetView(), projection);
-	platform2->setScale(2);
 
-	Mesh* platform3 = new Mesh(glm::vec3(17, -1, 0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", false, true);
+	Mesh* platform3 = new Mesh(blockPosArray.at(2), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/platform2.obj", false, true);
 	platform3->SetMVP(cam->GetView(), projection);
-	platform3->setScale(1.5);
+
+	Mesh* platform4 = new Mesh(blockPosArray.at(3), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", false, true);
+	platform4->SetMVP(cam->GetView(), projection);
+
+	Mesh* platform5 = new Mesh(blockPosArray.at(4), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/platform.obj", false, true);
+	platform5->SetMVP(cam->GetView(), projection);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
+	//variable de la camera
+	double mouseX, mouseY;
+
+	//limitCam
+	float limitY = 1.f;
+
+	glm::vec3 camPos;
 	do {
+		camPos = cam->GetPosition();
+		//check limit cam
+		if (limitY == 1.f && camPos.x > 33.f)
+			limitY =2.f;
+		else if (limitY == 2.f && camPos.x < 33.f)
+			limitY = 1.f;
+
+		glfwGetCursorPos(window, &mouseX, &mouseY);
 		//input camera
-		cam->MoveCamera(window);
+		cam->MoveCamera(window, mouseX, mouseY);
 		InputManager(window);
 		if (cam->GetIsJumping())
 			cam->Jump();
-		else if(cam->GetPosition().y>1.f)
-			cam->Gravity();
+		else if(camPos.y>limitY)
+			cam->Gravity(false);
+		else if (camPos.x < -5.f || (15.f < camPos.x && camPos.x < 20.f) || (30.f < camPos.x && camPos.x < 33.f) || camPos.x > 48.f)
+			cam->Gravity(false);
 
 		cube->SetMVP(cam->GetView(), projection);
+		neko->SetMVP(cam->GetView(), projection);
 		platform->SetMVP(cam->GetView(), projection);
 		platform2->SetMVP(cam->GetView(), projection);
 		platform3->SetMVP(cam->GetView(), projection);
+		platform4->SetMVP(cam->GetView(), projection);
+		platform5->SetMVP(cam->GetView(), projection);
 
 		//affiche
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
 		//changeColor();
 
-		cube->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
-		platform->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
-		platform2->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
-		platform3->DrawMesh(cam->GetPosition(), lightColor, cam->GetPosition(),vert);
+		//draw props
+		cube->DrawMesh(camPos, lightColor, lightPos.at(0), vert);
+		neko->DrawMesh(camPos, lightColor, lightPos.at(2), ore);
+
+		//draw platform
+		platform->DrawMesh(camPos, lightColor, lightPos.at(0),vert);
+		platform2->DrawMesh(camPos, lightColor, lightPos.at(0),vert);
+		platform3->DrawMesh(camPos, lightColor, lightPos.at(1), gris);
+		platform4->DrawMesh(camPos, lightColor, lightPos.at(2), violet);
+		platform5->DrawMesh(camPos, lightColor, lightPos.at(2), violet);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

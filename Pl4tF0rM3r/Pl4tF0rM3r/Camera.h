@@ -7,7 +7,6 @@
 #include "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/external/glm-master/glm/ext/matrix_transform.hpp"
 #include <iostream>
 #include <vector>
-#include <thread>
 
 class Camera
 {
@@ -31,10 +30,11 @@ public:
 
 	inline glm::mat4 GetView() { return view;}
 	inline glm::vec3 GetPosition() { return m_postion; }
-	void MoveCamera(GLFWwindow* window);
+	void MoveCamera(GLFWwindow* window, double mouseX, double mouseY);
 	void Jump();
-	void Gravity();
+	void Gravity(bool isGround);
 	void SetCurrentView();
 	inline bool GetIsJumping() { return isJumping; }
+	inline void Restart() { m_postion = glm::vec3(0.f, 1.f, 0.f); }
 };
 

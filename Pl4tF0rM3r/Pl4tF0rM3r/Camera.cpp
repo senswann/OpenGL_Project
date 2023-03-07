@@ -5,8 +5,8 @@ Camera::Camera(glm::vec3 position) {
 	lastTime = currentTime;
 
 	speed = 10.f;
-	jumpForce = 6.f;
-	rotationSpeed = 1.f;
+	jumpForce = 3.f;
+	rotationSpeed = 0.005f;
 
 	// Angle horizontal : vers -Z 
 	horizontalAngle = 3.14f;
@@ -73,20 +73,29 @@ void Camera::Jump() {
 	if (currentTime >=jumpDeltaTime) {
 		isJumping = false;
 		jumpCount = 0;
+		jumpForce = 3.f;
 	}
 	else {
+		if (jumpForce < 6.f)
+			jumpForce += 0.01f;
 		m_postion += m_up * deltaTime * jumpForce;
 		jumpCount++;
 	}
 }
 
-void Camera::Gravity() {
-	m_postion -= m_up * deltaTime * (jumpForce*1.35f);
-	if (m_postion.y <= 1)
-		isGrounded = true;
+void Camera::Gravity(bool isGround) {
+	isGrounded = true;
+	if (isGround) {
+		jumpForce = 3.f;
+	}
+	else {
+		if (jumpForce < 6.f)
+			jumpForce += 0.01f;
+		m_postion -= m_up * deltaTime * (jumpForce*1.35f);
+	}
 }
 
-void Camera::MoveCamera(GLFWwindow* window) {
+void Camera::MoveCamera(GLFWwindow* window, double mouseX, double mouseY) {
 	// R�cup�re le temps pour le d�placement
 	currentTime = glfwGetTime();
 	deltaTime = float(currentTime - lastTime);
@@ -103,6 +112,9 @@ void Camera::MoveCamera(GLFWwindow* window) {
 	// Pas � gauche
 	else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		m_postion -= m_right * deltaTime * speed;
+	// Restart
+	else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		Restart();
 	
 	// Jump
 	if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !isJumping && isGrounded) {
@@ -111,12 +123,7 @@ void Camera::MoveCamera(GLFWwindow* window) {
 		isGrounded = false;
 	}
 
-	// Tourne � gauche
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-		horizontalAngle += rotationSpeed * deltaTime;
-	// Tourne � droite
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-		horizontalAngle -= rotationSpeed * deltaTime;
+	horizontalAngle = -(mouseX)*rotationSpeed;
 	
 	SetCurrentView();
 }

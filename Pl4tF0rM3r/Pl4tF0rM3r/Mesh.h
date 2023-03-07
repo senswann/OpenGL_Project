@@ -41,6 +41,9 @@ class Mesh
 	int m_cellshading;
 	int m_vertexNumber;
 	float scale;
+	float degree;
+	glm::vec3 rotation;
+	float angle;
 	glm::vec3 position;
 	std::vector<unsigned short> indices;
 
@@ -52,7 +55,8 @@ public:
 
 	inline void SetMVP(glm::mat4 view, glm::mat4 projection) { MVP = projection * view * model; };
 	inline glm::mat4 GetMVP() { return MVP; };
-	inline void setScale(float _scale) { scale=_scale; model = glm::scale(model, glm::vec3(scale));};
+	inline void setScale(float _scale) { scale = _scale; model = glm::scale(model, glm::vec3(scale)); };
+	inline void setRotate(float x, float  y, float z, float _degree) { float degree = _degree; glm::vec3 rotation = glm::vec3(x, y, z); model = glm::rotate(model, glm::radians(degree), rotation); };
 	inline void setPosition(glm::vec3 _position) { position = _position; model = glm::translate(model, position); };
 	void DrawMesh(glm::vec3 viewPos, glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 color);
 };
