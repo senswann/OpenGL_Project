@@ -2,7 +2,7 @@
 
 ## Input
 
-Déplacement : AZER <br>
+Déplacement : ZQSD <br>
 Jump : Espace <br>
 Camera : Souris <br>
 Recommencer : R <br>
