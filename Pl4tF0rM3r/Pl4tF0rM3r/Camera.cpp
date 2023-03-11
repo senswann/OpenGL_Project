@@ -1,9 +1,14 @@
-﻿#include "Camera.h"
+﻿#pragma once
+//include
+#include "Camera.h"
 
+//constructeur de camera
 Camera::Camera(glm::vec3 position) {
+	//on set le temps
 	currentTime = glfwGetTime();
 	lastTime = currentTime;
 
+	//on set les forces a appliquer
 	speed = 10.f;
 	jumpForce = 3.f;
 	rotationSpeed = 0.005f;
@@ -33,6 +38,7 @@ Camera::Camera(glm::vec3 position) {
 	//Vecteur de position
 	m_postion = position;
 
+	//mise a jour de la matrice de vue
 	view = glm::lookAt(
 		m_postion,
 		m_postion + m_direction,
@@ -40,6 +46,7 @@ Camera::Camera(glm::vec3 position) {
 	);
 }
 
+//destructeur de camera
 Camera::~Camera(){}
 
 //fonction pour set la vue actuel;
@@ -70,33 +77,39 @@ void Camera::SetCurrentView() {
 
 //fonction du jump
 void Camera::Jump() {
+	//si on depasse le delay dde jump on arrete de sauter
 	if (currentTime >=jumpDeltaTime) {
 		isJumping = false;
-		jumpCount = 0;
 		jumpForce = 3.f;
 	}
+	//sinon on continu de sauter
 	else {
+		//on augmente la vitesse progrssivement jusqu'a arrivé a un certain seuille
 		if (jumpForce < 6.f)
 			jumpForce += 0.01f;
 		m_postion += m_up * deltaTime * jumpForce;
-		jumpCount++;
 	}
 }
-
+//fonction gerant la gravite
 void Camera::Gravity(bool isGround) {
-	isGrounded = true;
+	
+	//si on est au sol on reinitialise le jump
 	if (isGround) {
 		jumpForce = 3.f;
+		isGrounded = true;
 	}
+	//sinon on continue de tomber
 	else {
+		//on augmente la vitesse progrssivement jusqu'a arrivé a un certain seuille
 		if (jumpForce < 6.f)
 			jumpForce += 0.01f;
 		m_postion -= m_up * deltaTime * (jumpForce*1.35f);
 	}
 }
 
+//fonction gerant les input
 void Camera::MoveCamera(GLFWwindow* window, double mouseX, double mouseY) {
-	// R�cup�re le temps pour le d�placement
+	// Recupere le temps pour le deplacement
 	currentTime = glfwGetTime();
 	deltaTime = float(currentTime - lastTime);
 	lastTime = currentTime;
@@ -106,10 +119,10 @@ void Camera::MoveCamera(GLFWwindow* window, double mouseX, double mouseY) {
 	// Aller vers l'arri�re
 	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		m_postion -= m_direction * deltaTime * speed;
-	// Pas � droite
+	// Pas a droite
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		m_postion += m_right * deltaTime * speed;
-	// Pas � gauche
+	// Pas a gauche
 	else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		m_postion -= m_right * deltaTime * speed;
 	// Restart
@@ -123,7 +136,9 @@ void Camera::MoveCamera(GLFWwindow* window, double mouseX, double mouseY) {
 		isGrounded = false;
 	}
 
+	//recuperation du mouvement de camera
 	horizontalAngle = -(mouseX)*rotationSpeed;
 	
+	//on met a jour la camera
 	SetCurrentView();
 }

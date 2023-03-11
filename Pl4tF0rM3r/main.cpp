@@ -12,39 +12,28 @@
 double lastColorChangeTime = 0.0;
 float width = 1280;
 float height = 720;
-
-float scale = 1.0f;
 glm::mat4 projection = glm::perspective(45.f, width / height, 0.1f, 100.f);
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	scale += yoffset * 0.1f;
-}
-
-void InputManager(GLFWwindow* _window) {
-	//input scale
-	glfwSetScrollCallback(_window, scroll_callback);
-}
-
+//fonction utiliser pour changer de facon random la couleur du fond
 void changeColor() {
-	// get the current time
+	//on recup le temps actuel
 	double currentTime = glfwGetTime();
 
 	if (currentTime - lastColorChangeTime > 2) {
-		// generate random red, green, and blue values between 0 and 1
+		//random rouge, vert, bleu
 		float r = (float)rand() / RAND_MAX;
 		float g = (float)rand() / RAND_MAX;
 		float b = (float)rand() / RAND_MAX;
 
-		// set the clear color to the random color
+		//on set la couleur
 		glClearColor(r, g, b, 1.0f);
 
-		// update the time of the last color change
+		// on met a jour la valeur du dernier changement
 		lastColorChangeTime = currentTime;
 	}
 }
 
-//poue check si nous somme sur un block
+//poue check si nous somme sur un block (ne fonctionne pas)
 void CheckColision(Camera cam, std::vector<glm::vec3> blockPosArray, std::vector<glm::vec3> blockSizeArray) {
 	glm::vec3 cameraPos = cam.GetPosition();
 	for (int i = 0; i < blockPosArray.size(); i++) {
@@ -63,6 +52,7 @@ void CheckColision(Camera cam, std::vector<glm::vec3> blockPosArray, std::vector
 	cam.Gravity(false);
 }
 
+//fonction permettant de rescale la fenetre tout en gardant la bonne vue
 void framebuffer_size_callback(GLFWwindow* window, int _width, int _height) {
 	width = _width;
 	height = _height;
@@ -70,6 +60,7 @@ void framebuffer_size_callback(GLFWwindow* window, int _width, int _height) {
 }
 
 int main() {
+	//on initialise GLFW
 	if (!glfwInit()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		return -1;
@@ -80,6 +71,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
+	//on creer et initialise la fenetre
 	GLFWwindow* window;
 	window = glfwCreateWindow(width, height, "Pl4tF0rM3r", NULL, NULL);
 	if (window == NULL) {
@@ -89,9 +81,11 @@ int main() {
 	}
 	glfwMakeContextCurrent(window);
 
+	//on initialise le viewport
 	glViewport(0, 0, (int)width, (int)height);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+	//on check que GLEW fonctionne
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
@@ -139,10 +133,10 @@ int main() {
 	0.982f,  0.099f,  0.879f
 	};
 
-
 	//light color
-	glm::vec3 lightColor = glm::vec3(0.75f, 0.75f, 0.75f);
-	//light pos
+	glm::vec3 lightColor = glm::vec3(1.f, 1.f, 1.f);
+
+	//light position
 	std::vector<glm::vec3> lightPos;
 	lightPos.push_back(glm::vec3(5.f, 4.f, 0.f));
 	lightPos.push_back(glm::vec3(25.f, 4.f, 0.f));
@@ -155,12 +149,16 @@ int main() {
 	glm::vec3 bleu = glm::vec3(0.09, 0.9, 0.8);
 	glm::vec3 ore = glm::vec3(1., 0.76, 0.);
 
+	//couleur du fond
 	glClearColor(bleu.x, bleu.y, bleu.z,1.0f);
 
+	//on initialise les shadder utiliser
 	GLuint programID = LoadShaders("C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/VertexShader.vert", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/FragmentShader.frag");
+	
+	//on creer la camera
 	Camera* cam = new Camera(glm::vec3(0.f, 1.f, 0.f));
 
-	//props creation
+	//creation des props
 	Mesh* cube = new Mesh(glm::vec3(3, 1, 3), programID, g_color_buffer_data_cube,sizeof(g_color_buffer_data_cube), "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Shader/container.jpg", "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/cube.obj", true, false);
 	cube->SetMVP(cam->GetView(), projection);
 	cube->setScale(0.75);
@@ -169,7 +167,7 @@ int main() {
 	neko->SetMVP(cam->GetView(), projection);
 	neko->setRotate(0, 0.5, 0., -90.f);
 
-	//platform creation
+	//initialisation des positions et taille des blocks
 	std::vector<glm::vec3> blockPosArray;
 	std::vector<glm::vec3> blockSizeArray;
 
@@ -185,6 +183,7 @@ int main() {
 	blockSizeArray.push_back(glm::vec3(2, 2, 2));
 	blockSizeArray.push_back(glm::vec3(5, 5, 1));
 
+	//creation des platformes
 	Mesh* platform = new Mesh(blockPosArray.at(0), programID, g_color_buffer_data_cube, sizeof(g_color_buffer_data_cube), nullptr, "C:/Users/swann/Documents/github/OpenGL_Project/Pl4tF0rM3r/Model/platform.obj", false, true);
 	platform->SetMVP(cam->GetView(), projection);
 
@@ -206,22 +205,29 @@ int main() {
 	//variable de la camera
 	double mouseX, mouseY;
 
-	//limitCam
+	//limitCam (hauteur de la camera
 	float limitY = 1.f;
 
+	//variable stockant la position de la camera
 	glm::vec3 camPos;
+
+	//boucle de rendu
 	do {
 		camPos = cam->GetPosition();
+
 		//check limit cam
 		if (limitY == 1.f && camPos.x > 33.f)
 			limitY =2.f;
 		else if (limitY == 2.f && camPos.x < 33.f)
 			limitY = 1.f;
 
+		//recuperation de la positon de la souris
 		glfwGetCursorPos(window, &mouseX, &mouseY);
-		//input camera
+
+		//input de la camera
 		cam->MoveCamera(window, mouseX, mouseY);
-		InputManager(window);
+
+		//check pour savoir si le joueur peux sauter
 		if (cam->GetIsJumping())
 			cam->Jump();
 
@@ -229,14 +235,16 @@ int main() {
 		else if(camPos.y>limitY)
 			cam->Gravity(false);
 		//check les bordures sur l'axe X
-		else if (camPos.x < -5.f || (15.f < camPos.x && camPos.x < 20.f) || (15.f < camPos.x && camPos.x < 20.f) || (30.f < camPos.x && camPos.x < 33.f) || camPos.x > 48.f)
+		else if (camPos.x < -5.f || (15.f < camPos.x && camPos.x < 20.f) || (30.f < camPos.x && camPos.x < 33.f) || camPos.x > 48.f)
 			cam->Gravity(false);
 		//check les bordures sur l'axe Z
 		else if (camPos.z < -5.f || camPos.z > 5.f || ((camPos.z < -2.5f|| camPos.z > 2.5f) && (15.f < camPos.x && camPos.x < 38.f)))
 			cam->Gravity(false);
+		//sinon on le permet de resauter
+		else if (!cam->GetIsJumping())
+			cam->Gravity(true);
 
-		std::cout << "x = " << camPos.x << "/ z = " << camPos.z << std::endl;
-
+		//set du MVP pour tous les objets de la scene
 		cube->SetMVP(cam->GetView(), projection);
 		neko->SetMVP(cam->GetView(), projection);
 		platform->SetMVP(cam->GetView(), projection);
@@ -250,11 +258,11 @@ int main() {
 		glUseProgram(programID);
 		//changeColor();
 
-		//draw props
+		//dessine les props
 		cube->DrawMesh(camPos, lightColor, lightPos.at(0), vert);
 		neko->DrawMesh(camPos, lightColor, lightPos.at(2), ore);
 
-		//draw platform
+		//dessine les platformes
 		platform->DrawMesh(camPos, lightColor, lightPos.at(0),vert);
 		platform2->DrawMesh(camPos, lightColor, lightPos.at(0),vert);
 		platform3->DrawMesh(camPos, lightColor, lightPos.at(1), gris);
